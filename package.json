@@ -1,0 +1,35 @@
+{
+  "name": "hashname",
+  "version": "0.0.1",
+  "description": "Public-Key(s) Fingerprint Parser",
+  "dependencies": {
+    "base32": "~0.0.6"
+  },
+  "devDependencies": {
+    "chai": "*",
+    "mocha": "*"
+  },
+  "scripts": {
+      "test": "make test",
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/quartzjer/hashname.git"
+  },
+  "keywords": [
+    "hashname",
+    "pki",
+    "base32",
+    "fingerprint"
+  ],
+  "author": {
+    "name": "Jeremie Miller",
+    "email": "jeremie@jabber.org",
+    "url": "http://jeremie.com/"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/quartzjer/hashname/issues"
+  },
+  "homepage": "https://github.com/quartzjer/hashname"
+}
