@@ -1,7 +1,7 @@
 {
   "name": "hashname",
   "version": "0.0.1",
-  "description": "Public-Key(s) Fingerprint Parser",
+  "description": "Public-Key(s) Fingerprint Generator",
   "dependencies": {
     "base32": "~0.0.6"
   },
