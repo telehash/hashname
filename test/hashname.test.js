@@ -65,4 +65,10 @@ describe('hashname', function(){
     expect(hashname.match(['1a','2a','44'],['1a','2a','55'])).to.be.equal('2a');
   });
 
+  it('exposes base32 utility', function(){
+    expect(hashname.base32).to.be.an('object');
+    expect(hashname.base32.encode(new Buffer('foo'))).to.be.equal('ctqpy');
+    expect(hashname.base32.decode('ctqpy').toString()).to.be.equal('foo');
+  });
+
 })

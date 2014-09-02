@@ -18,6 +18,12 @@ function b32buff(str)
   return new Buffer(base32.decode(str),'binary');
 }
 
+// simple wrapper to consistently handle buffer<=>base32
+exports.base32 = {
+  encode:base32.encode,
+  decode:b32buff
+}
+
 // generate hashname from keys json, vals are either base32 keys or key binary Buffer's
 exports.fromKeys = function(json)
 {
