@@ -71,4 +71,13 @@ describe('hashname', function(){
     expect(hashname.base32.decode('ctqpy').toString()).to.be.equal('foo');
   });
 
+  it('verifies hashname', function(){
+    expect(hashname.isHashname('5ccn9gcxnj9nd7hp1m3v5pjwcu5hq80bt366bzh1ebhf9zqaxu2g')).to.be.true;
+    expect(hashname.isHashname({})).to.be.false;
+    expect(hashname.isHashname('5ccn9gcxnj9nd7hp1m3v5pjwcu5hq80bt366bzh1ebhf9zqaxu2')).to.be.false;
+    // TODO fix base32 to have a strict mode
+//    expect(hashname.isHashname('lccn9gcxnj9nd7hp1m3v5pjwcu5hq80bt366bzh1ebhf9zqaxu2g')).to.be.false;
+  });
+
+
 })

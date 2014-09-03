@@ -114,3 +114,10 @@ exports.compact = function(skip, keys)
   return ret;
 }
 
+exports.isHashname = function(hn)
+{
+  if(typeof hn != 'string') return false;
+  if(hn.length != 52) return false;
+  if(base32.decode(hn).length == 32) return true;
+  return false;
+}
