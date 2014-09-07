@@ -10,7 +10,7 @@ Primary usage:
 var hashname = require('hashname');
 var keys = {
   "3a":"tydfjkhd5vzt006t4nz5g5ztxmukk35whtr661ty3r8x80y46rv0",
-  "1a": "8jze4merv08q6med3u21y460fjdcphkyuc858538mh48zu8az39t1vxdg9tadzun"
+  "1a":"8jze4merv08q6med3u21y460fjdcphkyuc858538mh48zu8az39t1vxdg9tadzun"
 };
 var hn = hashname.fromKeys(keys));
 // hn will be '5ccn9gcxnj9nd7hp1m3v5pjwcu5hq80bt366bzh1ebhf9zqaxu2g'

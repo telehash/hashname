@@ -40,17 +40,17 @@ exports.fromKeys = function(json)
 }
 
 // generate from a given key (1a), and other intermediate json ({1a:true,2a:"..."})
-exports.fromKey = function(json, key)
+exports.fromPacket = function(packet)
 {
-  if(!Buffer.isBuffer(key)) return false;
-  if(typeof json != 'object') return false;
+  if(!Buffer.isBuffer(packet.body)) return false;
+  if(typeof packet.json != 'object') return false;
   var imbuff = {};
-  Object.keys(json).forEach(function(id){
-    if(json[id] === true)
+  Object.keys(packet.json).forEach(function(id){
+    if(packet.json[id] === true)
     {
-      imbuff[id] = crypto.createHash("sha256").update(key).digest();
+      imbuff[id] = crypto.createHash("sha256").update(packet.body).digest();
     }else{
-      imbuff[id] = (Buffer.isBuffer(json[id])) ? json[id] : b32buff(json[id]);
+      imbuff[id] = (Buffer.isBuffer(packet.json[id])) ? packet.json[id] : b32buff(packet.json[id]);
     }
   });
   // validate ids
@@ -105,13 +105,10 @@ exports.key = function(id, keys)
   return b32buff(keys[id]);
 }
 
-exports.compact = function(skip, keys)
+exports.intermediate = function(keys)
 {
-  var key = exports.key(skip, keys);
-  if(!key) return false;
   var ret = {};
   Object.keys(keys).forEach(function(id){
-    if(id == skip) return;
     ret[id] = base32.encode(crypto.createHash("sha256").update(b32buff(keys[id])).digest());
   });
   return ret;

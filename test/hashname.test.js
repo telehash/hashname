@@ -31,12 +31,12 @@ describe('hashname', function(){
     expect(hashname.buffer('4w0fh69ad6d1xhncwwd1020tqnhqm4y5zbdmtqdk7d3v36qk6wbg')).to.be.a('object');
   })
 
-  it('returns compact', function(){
+  it('returns intermediate', function(){
     var keys = {
       "3a":"tydfjkhd5vzt006t4nz5g5ztxmukk35whtr661ty3r8x80y46rv0",
       "1a": "8jze4merv08q6med3u21y460fjdcphkyuc858538mh48zu8az39t1vxdg9tadzun"
     };
-    var json = hashname.compact("3a",keys);
+    var json = hashname.intermediate(keys);
     expect(json).to.be.a('object');
     expect(json["1a"].length).to.be.equal(52);
   });
@@ -54,7 +54,7 @@ describe('hashname', function(){
   it('generates from compact', function(){
     var json = { '1a': 'kbr7mf0fgz04fd0tjtntxpx4pk9ht4qryk647mvy9gn39upu7zcg', '3a':true };
     var key = new Buffer('cf9af94e2d2eff9000d9257e5817f9ed35398cbc8e7063073e1e11d403c43636','hex');
-    expect(hashname.fromKey(json,key)).to.be.equal('5ccn9gcxnj9nd7hp1m3v5pjwcu5hq80bt366bzh1ebhf9zqaxu2g');
+    expect(hashname.fromPacket({json:json,body:key})).to.be.equal('5ccn9gcxnj9nd7hp1m3v5pjwcu5hq80bt366bzh1ebhf9zqaxu2g');
   });
 
   it('returns sorted ids', function(){
