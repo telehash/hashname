@@ -52,9 +52,9 @@ describe('hashname', function(){
   });
   
   it('generates from compact', function(){
-    var json = { '1a': 'kbr7mf0fgz04fd0tjtntxpx4pk9ht4qryk647mvy9gn39upu7zcg' };
+    var json = { '1a': 'kbr7mf0fgz04fd0tjtntxpx4pk9ht4qryk647mvy9gn39upu7zcg', '3a':true };
     var key = new Buffer('cf9af94e2d2eff9000d9257e5817f9ed35398cbc8e7063073e1e11d403c43636','hex');
-    expect(hashname.fromKey('3a',key,json)).to.be.equal('5ccn9gcxnj9nd7hp1m3v5pjwcu5hq80bt366bzh1ebhf9zqaxu2g');
+    expect(hashname.fromKey(json,key)).to.be.equal('5ccn9gcxnj9nd7hp1m3v5pjwcu5hq80bt366bzh1ebhf9zqaxu2g');
   });
 
   it('returns sorted ids', function(){

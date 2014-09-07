@@ -39,17 +39,20 @@ exports.fromKeys = function(json)
   return base32.encode(rollup(imbuff));
 }
 
-// generate from a given key, and other intermediate json
-exports.fromKey = function(id, key, json)
+// generate from a given key (1a), and other intermediate json ({1a:true,2a:"..."})
+exports.fromKey = function(json, key)
 {
-  if(typeof id != 'string') return false;
   if(!Buffer.isBuffer(key)) return false;
   if(typeof json != 'object') return false;
   var imbuff = {};
   Object.keys(json).forEach(function(id){
-    imbuff[id] = (Buffer.isBuffer(json[id])) ? json[id] : b32buff(json[id]);
+    if(json[id] === true)
+    {
+      imbuff[id] = crypto.createHash("sha256").update(key).digest();
+    }else{
+      imbuff[id] = (Buffer.isBuffer(json[id])) ? json[id] : b32buff(json[id]);
+    }
   });
-  imbuff[id] = crypto.createHash("sha256").update(key).digest();
   // validate ids
   if(!exports.ids(imbuff).length) return false;
   return base32.encode(rollup(imbuff));

@@ -1,6 +1,6 @@
 {
   "name": "hashname",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Public-Key(s) Fingerprint Generator",
   "dependencies": {
     "base32": "~0.0.6"
