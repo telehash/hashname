@@ -1,9 +1,9 @@
 {
   "name": "hashname",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Public-Key(s) Fingerprint Generator",
   "dependencies": {
-    "base32": "~0.0.6"
+    "rfc-3548-b32": "~0.0.2"
   },
   "devDependencies": {
     "chai": "*",

@@ -1,4 +1,4 @@
-var base32 = require('base32');
+var base32 = require('rfc-3548-b32');
 var crypto = require('crypto');
 
 // rollup uses only intermediate buffers, data must be validated first
@@ -12,16 +12,21 @@ function rollup(imbuff)
   return roll;
 }
 
-// always returns a buffer
-function b32buff(str)
-{
-  return new Buffer(base32.decode(str),'binary');
-}
-
 // simple wrapper to consistently handle buffer<=>base32
 exports.base32 = {
-  encode:base32.encode,
-  decode:b32buff
+  encode:function(){
+    return base32.encode.apply(this,arguments).toLowerCase().split('=').join('');
+  },
+  decode:function(){
+    var buf;
+    try{
+      buf = base32.decode.apply(this,arguments);
+    }catch(E){
+      console.log("ERRR",E)
+      buf = new Buffer(0);
+    }
+    return buf;
+  }
 }
 
 // generate hashname from keys json, vals are either base32 keys or key binary Buffer's
@@ -31,12 +36,12 @@ exports.fromKeys = function(json)
   if(!Object.keys(json).length) return false;
   var imbuff = {};
   Object.keys(json).forEach(function(id){
-    var keybuf = (Buffer.isBuffer(json[id])) ? json[id] : b32buff(json[id]);
+    var keybuf = (Buffer.isBuffer(json[id])) ? json[id] : exports.base32.decode(json[id]);
     imbuff[id] = crypto.createHash("sha256").update(keybuf).digest();
   });
   // validate ids
   if(!exports.ids(imbuff).length) return false;
-  return base32.encode(rollup(imbuff));
+  return exports.base32.encode(rollup(imbuff));
 }
 
 // generate from a given key (1a), and other intermediate json ({1a:true,2a:"..."})
@@ -50,19 +55,19 @@ exports.fromPacket = function(packet)
     {
       imbuff[id] = crypto.createHash("sha256").update(packet.body).digest();
     }else{
-      imbuff[id] = (Buffer.isBuffer(packet.json[id])) ? packet.json[id] : b32buff(packet.json[id]);
+      imbuff[id] = (Buffer.isBuffer(packet.json[id])) ? packet.json[id] : exports.base32.decode(packet.json[id]);
     }
   });
   // validate ids
   if(!exports.ids(imbuff).length) return false;
-  return base32.encode(rollup(imbuff));
+  return exports.base32.encode(rollup(imbuff));
 }
 
 // just parse a hashname into a 32byte buffer
 exports.buffer = function(hn)
 {
   if(typeof hn != 'string') return false;
-  var buf = b32buff(hn);
+  var buf = exports.base32.decode(hn);
   if(buf.length != 32) return false;
   return buf;
 }
@@ -102,14 +107,14 @@ exports.key = function(id, keys)
 {
   if(typeof keys != 'object') return false;
   if(typeof keys[id] != 'string') return false;
-  return b32buff(keys[id]);
+  return exports.base32.decode(keys[id]);
 }
 
 exports.intermediate = function(keys)
 {
   var ret = {};
   Object.keys(keys).forEach(function(id){
-    ret[id] = base32.encode(crypto.createHash("sha256").update(b32buff(keys[id])).digest());
+    ret[id] = exports.base32.encode(crypto.createHash("sha256").update(exports.base32.decode(keys[id])).digest());
   });
   return ret;
 }
@@ -118,6 +123,6 @@ exports.isHashname = function(hn)
 {
   if(typeof hn != 'string') return false;
   if(hn.length != 52) return false;
-  if(base32.decode(hn).length == 32) return true;
+  if(exports.base32.decode(hn).length == 32) return true;
   return false;
 }
