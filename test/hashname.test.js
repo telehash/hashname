@@ -6,17 +6,17 @@ describe('hashname', function(){
 
   it('should generate from two keys', function(){
     var keys = {
-      "3a":"tydfjkhd5vzt006t4nz5g5ztxmukk35whtr661ty3r8x80y46rv0",
-      "1a": "8jze4merv08q6med3u21y460fjdcphkyuc858538mh48zu8az39t1vxdg9tadzun"
+      "3a":"hp6yglmmqwcbw5hno37uauh6fn6dx5oj7s5vtapaifrur2jv6zha",
+      "1a": "vgjz3yjb6cevxjomdleilmzasbj6lcc7"
     };
-    expect(hashname.fromKeys(keys)).to.be.equal('anptpctxorixfzzj6dwwncwz3vzeessbhuokkfsdlx2upxw4qocq');
+    expect(hashname.fromKeys(keys)).to.be.equal('jvdoio6kjvf3yqnxfvck43twaibbg4pmb7y3mqnvxafb26rqllwa');
   })
 
   it('should generate from one key', function(){
     var keys = {
-      "1a": "8jze4merv08q6med3u21y460fjdcphkyuc858538mh48zu8az39t1vxdg9tadzun"
+      "1a": "vgjz3yjb6cevxjomdleilmzasbj6lcc7"
     };
-    expect(hashname.fromKeys(keys)).to.be.equal('4zkizbvt5aufpy3tdcmot4qpubkcmmepcgwwv5otgjr3vxpfp3pa');
+    expect(hashname.fromKeys(keys)).to.be.equal('echmb6eke2f6z2mqdwifrt6i6hkkfua7hiisgrms6pwttd6jubiq');
   })
 
   it('fails w/ no keys', function(){
@@ -33,28 +33,28 @@ describe('hashname', function(){
 
   it('returns intermediate', function(){
     var keys = {
-      "3a":"tydfjkhd5vzt006t4nz5g5ztxmukk35whtr661ty3r8x80y46rv0",
-      "1a": "8jze4merv08q6med3u21y460fjdcphkyuc858538mh48zu8az39t1vxdg9tadzun"
+      "3a":"hp6yglmmqwcbw5hno37uauh6fn6dx5oj7s5vtapaifrur2jv6zha",
+      "1a": "vgjz3yjb6cevxjomdleilmzasbj6lcc7"
     };
     var json = hashname.intermediate(keys);
     expect(json).to.be.a('object');
-    expect(json["1a"].length).to.be.equal(52);
+    expect(json["1a"]).to.be.equal('ym7p66flpzyncnwkzxv2qk5dtosgnnstgfhw6xj2wvbvm7oz5oaq');
   });
 
   it('returns key buffer', function(){
     var keys = {
-      "3a":"tydfjkhd5vzt006t4nz5g5ztxmukk35whtr661ty3r8x80y46rv0",
-      "1a": "8jze4merv08q6med3u21y460fjdcphkyuc858538mh48zu8az39t1vxdg9tadzun"
+      "3a":"hp6yglmmqwcbw5hno37uauh6fn6dx5oj7s5vtapaifrur2jv6zha",
+      "1a": "vgjz3yjb6cevxjomdleilmzasbj6lcc7"
     };
     var buf = hashname.key("3a",keys);
     expect(buf).to.be.a('object');
-    expect(buf.toString('hex')).to.be.equal('9e0654a8e3ed737fffd3e373d37733bb28a56fb63ce3effe78dcff7fff1cf46f');
+    expect(buf.toString('hex')).to.be.equal('3bfd832d8c85841b74ed76ff4050fe2b7c3bf5c9fcbb5981e0416348e935f64e');
   });
   
   it('generates from compact', function(){
-    var json = { '1a': 'kbr7mf0fgz04fd0tjtntxpx4pk9ht4qryk647mvy9gn39upu7zcg', '3a':true };
-    var key = new Buffer('cf9af94e2d2eff9000d9257e5817f9ed35398cbc8e7063073e1e11d403c43636','hex');
-    expect(hashname.fromPacket({json:json,body:key})).to.be.equal('wuvp6is3ae6oa7fzmt6uuyysmnabst43fp2wastwv53oxtkdfuma');
+    var json = { '1a': 'ym7p66flpzyncnwkzxv2qk5dtosgnnstgfhw6xj2wvbvm7oz5oaq', '3a':true };
+    var key = new Buffer('3bfd832d8c85841b74ed76ff4050fe2b7c3bf5c9fcbb5981e0416348e935f64e','hex');
+    expect(hashname.fromPacket({json:json,body:key})).to.be.equal('jvdoio6kjvf3yqnxfvck43twaibbg4pmb7y3mqnvxafb26rqllwa');
   });
 
   it('returns sorted ids', function(){
