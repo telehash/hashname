@@ -19,6 +19,13 @@ describe('hashname', function(){
     expect(hashname.fromKeys(keys)).to.be.equal('echmb6eke2f6z2mqdwifrt6i6hkkfua7hiisgrms6pwttd6jubiq');
   })
 
+  it('should generate from a buffer', function(){
+    var keys = {
+      "3a": new Buffer('3bfd832d8c85841b74ed76ff4050fe2b7c3bf5c9fcbb5981e0416348e935f64e','hex')
+    };
+    expect(hashname.fromKeys(keys)).to.be.equal('nzf4f6j7ylv53z3m4egrwltv2t2yks4rtpaimeg3avwqsoshqxba');
+  })
+
   it('fails w/ no keys', function(){
     expect(hashname.fromKeys({})).to.be.equal(false);
   })
