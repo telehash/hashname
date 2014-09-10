@@ -17,8 +17,8 @@ exports.base32 = {
   encode:function(){
     return base32.encode.apply(this,arguments).toLowerCase().split('=').join('');
   },
-  decode:function(){
-    var buf;
+  decode:function(buf){
+    if(Buffer.isBuffer(buf)) return buf;
     try{
       buf = base32.decode.apply(this,arguments);
     }catch(E){
@@ -110,13 +110,23 @@ exports.key = function(id, keys)
   return exports.base32.decode(keys[id]);
 }
 
-exports.intermediate = function(keys)
+// generate the more compact packet format
+exports.toPacket = function(keys, id)
 {
-  var ret = {};
-  Object.keys(keys).forEach(function(id){
-    ret[id] = exports.base32.encode(crypto.createHash("sha256").update(exports.base32.decode(keys[id])).digest());
+  if(typeof keys != 'object') return false;
+  if(typeof keys[id] != 'string') return false;
+  var json = {};
+  var body;
+  Object.keys(keys).forEach(function(id2){
+    if(id == id2)
+    {
+      json[id] = true;
+      body = exports.base32.decode(keys[id]);
+    }else{
+      json[id2] = exports.base32.encode(crypto.createHash("sha256").update(exports.base32.decode(keys[id2])).digest());
+    }
   });
-  return ret;
+  return {json:json, body:body};
 }
 
 exports.isHashname = function(hn)

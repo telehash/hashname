@@ -31,14 +31,15 @@ describe('hashname', function(){
     expect(hashname.buffer('4w0fh69ad6d1xhncwwd1020tqnhqm4y5zbdmtqdk7d3v36qk6wbg')).to.be.a('object');
   })
 
-  it('returns intermediate', function(){
+  it('returns packet', function(){
     var keys = {
       "3a":"hp6yglmmqwcbw5hno37uauh6fn6dx5oj7s5vtapaifrur2jv6zha",
       "1a": "vgjz3yjb6cevxjomdleilmzasbj6lcc7"
     };
-    var json = hashname.intermediate(keys);
-    expect(json).to.be.a('object');
-    expect(json["1a"]).to.be.equal('ym7p66flpzyncnwkzxv2qk5dtosgnnstgfhw6xj2wvbvm7oz5oaq');
+    var packet = hashname.toPacket(keys,"3a");
+    expect(packet).to.be.a('object');
+    expect(Buffer.isBuffer(packet.body)).to.be.true;
+    expect(packet.json["1a"]).to.be.equal('ym7p66flpzyncnwkzxv2qk5dtosgnnstgfhw6xj2wvbvm7oz5oaq');
   });
 
   it('returns key buffer', function(){
@@ -51,7 +52,7 @@ describe('hashname', function(){
     expect(buf.toString('hex')).to.be.equal('3bfd832d8c85841b74ed76ff4050fe2b7c3bf5c9fcbb5981e0416348e935f64e');
   });
   
-  it('generates from compact', function(){
+  it('generates from packet', function(){
     var json = { '1a': 'ym7p66flpzyncnwkzxv2qk5dtosgnnstgfhw6xj2wvbvm7oz5oaq', '3a':true };
     var key = new Buffer('3bfd832d8c85841b74ed76ff4050fe2b7c3bf5c9fcbb5981e0416348e935f64e','hex');
     expect(hashname.fromPacket({json:json,body:key})).to.be.equal('jvdoio6kjvf3yqnxfvck43twaibbg4pmb7y3mqnvxafb26rqllwa');
