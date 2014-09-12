@@ -65,6 +65,12 @@ describe('hashname', function(){
     expect(hashname.fromPacket({json:json,body:key})).to.be.equal('jvdoio6kjvf3yqnxfvck43twaibbg4pmb7y3mqnvxafb26rqllwa');
   });
 
+  it('generates from packet and hint', function(){
+    var json = { '1a': 'ym7p66flpzyncnwkzxv2qk5dtosgnnstgfhw6xj2wvbvm7oz5oaq'};
+    var key = new Buffer('3bfd832d8c85841b74ed76ff4050fe2b7c3bf5c9fcbb5981e0416348e935f64e','hex');
+    expect(hashname.fromPacket({json:json,body:key},'3a')).to.be.equal('jvdoio6kjvf3yqnxfvck43twaibbg4pmb7y3mqnvxafb26rqllwa');
+  });
+
   it('returns sorted ids', function(){
     expect(hashname.ids(['1a','2a']).toString()).to.be.equal(['2a','1a'].toString());
   });

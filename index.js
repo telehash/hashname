@@ -35,22 +35,23 @@ exports.fromKeys = function(json)
   if(typeof json != 'object') return false;
   if(!Object.keys(json).length) return false;
   var imbuff = {};
-  Object.keys(json).forEach(function(id){
+  exports.ids(json).forEach(function(id){
     var keybuf = (Buffer.isBuffer(json[id])) ? json[id] : exports.base32.decode(json[id]);
     imbuff[id] = crypto.createHash("sha256").update(keybuf).digest();
   });
-  // validate ids
-  if(!exports.ids(imbuff).length) return false;
+  // require only valid keys to be passed in
+  if(Object.keys(imbuff).length != Object.keys(json).length) return false;
   return exports.base32.encode(rollup(imbuff));
 }
 
 // generate from a given key (1a), and other intermediate json ({1a:true,2a:"..."})
-exports.fromPacket = function(packet)
+exports.fromPacket = function(packet, hint)
 {
   if(!Buffer.isBuffer(packet.body)) return false;
   if(typeof packet.json != 'object') return false;
+  if(Buffer.isBuffer(hint)) hint = hint.toString('hex');
   var imbuff = {};
-  Object.keys(packet.json).forEach(function(id){
+  exports.ids(packet.json).forEach(function(id){
     if(packet.json[id] === true)
     {
       imbuff[id] = crypto.createHash("sha256").update(packet.body).digest();
@@ -58,8 +59,7 @@ exports.fromPacket = function(packet)
       imbuff[id] = (Buffer.isBuffer(packet.json[id])) ? packet.json[id] : exports.base32.decode(packet.json[id]);
     }
   });
-  // validate ids
-  if(!exports.ids(imbuff).length) return false;
+  if(hint) imbuff[hint] = crypto.createHash("sha256").update(packet.body).digest();
   return exports.base32.encode(rollup(imbuff));
 }
 
@@ -80,14 +80,13 @@ exports.ids = function(keys)
     keys = Object.keys(keys);
   }
   if(!Array.isArray(keys)) return [];
+  // validate them
+  var ret = [];
+  keys.forEach(function(id){
+    if(exports.isID(id)) ret.push(id);
+  })
   // sort them
-  var keys = keys.sort().reverse();
-  for(var i = 0; keys[i]; i++)
-  {
-    if(typeof keys[i] != 'string' || keys[i].length != 2 || (new Buffer(keys[i],'hex')).length != 1) return [];
-  }
-  if(!keys.length) return [];
-  return keys;
+  return ret.sort().reverse();
 }
 
 // just a convenience
@@ -114,10 +113,10 @@ exports.key = function(id, keys)
 exports.toPacket = function(keys, id)
 {
   if(typeof keys != 'object') return false;
-  if(typeof keys[id] != 'string') return false;
+  if(!keys[id]) return false;
   var json = {};
   var body;
-  Object.keys(keys).forEach(function(id2){
+  exports.ids(keys).forEach(function(id2){
     if(id == id2)
     {
       json[id] = true;
@@ -134,5 +133,15 @@ exports.isHashname = function(hn)
   if(typeof hn != 'string') return false;
   if(hn.length != 52) return false;
   if(exports.base32.decode(hn).length == 32) return true;
+  return false;
+}
+
+exports.isID = function(id)
+{
+  if(Buffer.isBuffer(id) && id.length == 1) return true;
+  if(typeof id != 'string') return false;
+  if(id.length != 2) return false;
+  var buf = new Buffer(id,'hex');
+  if(buf && buf.length == 1) return true;
   return false;
 }

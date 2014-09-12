@@ -1,6 +1,6 @@
 {
   "name": "hashname",
-  "version": "0.2.2",
+  "version": "0.2.4",
   "description": "Public-Key(s) Fingerprint Generator",
   "dependencies": {
     "rfc-3548-b32": "~0.0.2"
