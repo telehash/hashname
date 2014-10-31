@@ -47,6 +47,8 @@ describe('hashname', function(){
     expect(packet).to.be.a('object');
     expect(Buffer.isBuffer(packet.body)).to.be.true;
     expect(packet.json["1a"]).to.be.equal('ym7p66flpzyncnwkzxv2qk5dtosgnnstgfhw6xj2wvbvm7oz5oaq');
+    var packet = hashname.toPacket(keys,"1a");
+    expect(packet.json["3a"]).to.be.equal('bmxelsxgecormqjlnati6chxqua7wzipxliw5le35ifwxlge2zva');
   });
 
   it('returns key buffer', function(){
