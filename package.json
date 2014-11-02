@@ -1,6 +1,6 @@
 {
   "name": "hashname",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Public-Key(s) Fingerprint Generator",
   "dependencies": {
     "rfc-3548-b32": "~0.0.2"
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/quartzjer/hashname.git"
+    "url": "https://github.com/telehash/hashname.git"
   },
   "keywords": [
     "hashname",
@@ -29,7 +29,7 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/quartzjer/hashname/issues"
+    "url": "https://github.com/telehash/hashname/issues"
   },
-  "homepage": "https://github.com/quartzjer/hashname"
+  "homepage": "https://github.com/telehash/hashname"
 }
