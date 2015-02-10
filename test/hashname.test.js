@@ -77,6 +77,12 @@ describe('hashname', function(){
     expect(hashname.ids(['1a','2a']).toString()).to.be.equal(['2a','1a'].toString());
   });
 
+  it('rejects bad id', function(){
+    expect(hashname.isID('1a')).to.be.true;
+    expect(hashname.isID('at')).to.be.false;
+    expect(hashname.isID('1 ')).to.be.false;
+  });
+
   it('finds best id', function(){
     expect(hashname.match(['1a','2a','44'],['1a','2a','55'])).to.be.equal('2a');
   });

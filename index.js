@@ -142,6 +142,6 @@ exports.isID = function(id)
   if(typeof id != 'string') return false;
   if(id.length != 2) return false;
   var buf = new Buffer(id,'hex');
-  if(buf && buf.length == 1) return true;
+  if(buf && buf.toString('hex') == id) return true;
   return false;
 }
