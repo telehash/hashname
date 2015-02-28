@@ -1,4 +1,5 @@
 var base32 = require('rfc-3548-b32');
+var siphash = require('siphash');
 var crypto = require('crypto');
 
 // rollup uses only intermediate buffers, data must be validated first
@@ -28,6 +29,30 @@ exports.base32 = {
     return buf;
   }
 }
+
+// wrapper of easier to use siphash interface
+exports.siphash = function(key, value){
+  if(!key || !value) return false;
+  if(exports.isHashname(key)) key = base32.decode(key).slice(0,16);
+  // convert to siphash key array format
+  if(Buffer.isBuffer(key) && key.length == 16)
+  {
+    var key2 = [];
+    key2[0] = key.readUInt32BE(0);
+    key2[1] = key.readUInt32BE(4);
+    key2[2] = key.readUInt32BE(8);
+    key2[3] = key.readUInt32BE(12);
+    key = key2;
+  }
+  if(key.length != 4) return false;
+  if(Buffer.isBuffer(value)) value = value.toString('binary');
+  var hash = siphash.hash(key,value);
+  var digest = new Buffer(8);
+  digest.writeUInt32BE(hash.h,0);
+  digest.writeUInt32BE(hash.l,4);
+  digest.key = key; // for reference
+  return digest;
+};
 
 // generate hashname from keys json, vals are either base32 keys or key binary Buffer's
 exports.fromKeys = function(json)

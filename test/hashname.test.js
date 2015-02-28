@@ -93,6 +93,11 @@ describe('hashname', function(){
     expect(hashname.base32.decode('mzxw6').toString()).to.be.equal('foo');
   });
 
+  it('exposes siphash utility', function(){
+    expect(hashname.siphash).to.be.a('function');
+    expect(hashname.siphash('anptpctxorixfzzj6dwwncwz3vzeessbhuokkfsdlx2upxw4qocq', 'bar').toString('hex')).to.be.equal('7aca1b410fcaed47');
+  });
+
   it('verifies hashname', function(){
     expect(hashname.isHashname('anptpctxorixfzzj6dwwncwz3vzeessbhuokkfsdlx2upxw4qocq')).to.be.true;
     expect(hashname.isHashname({})).to.be.false;

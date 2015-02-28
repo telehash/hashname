@@ -3,6 +3,7 @@
   "version": "0.2.6",
   "description": "Public-Key(s) Fingerprint Generator",
   "dependencies": {
+    "siphash": "^1.0.1",
     "rfc-3548-b32": "~0.0.2"
   },
   "devDependencies": {

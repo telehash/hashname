@@ -16,4 +16,4 @@ var hn = hashname.fromKeys(keys));
 // hn will be 'jvdoio6kjvf3yqnxfvck43twaibbg4pmb7y3mqnvxafb26rqllwa'
 ```
 
-There's also other utility/convenience methods, see the examples in the [tests](test/).
+There's additional convenience methods and base32/siphash utilities exported, see the examples in the [tests](test/).
