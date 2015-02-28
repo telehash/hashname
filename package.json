@@ -1,6 +1,6 @@
 {
   "name": "hashname",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Public-Key(s) Fingerprint Generator",
   "dependencies": {
     "siphash": "^1.0.1",
@@ -11,7 +11,7 @@
     "mocha": "*"
   },
   "scripts": {
-      "test": "make test"
+    "test": "make test"
   },
   "repository": {
     "type": "git",
