@@ -87,6 +87,12 @@ describe('hashname', function(){
     expect(hashname.match(['1a','2a','44'],['1a','2a','55'])).to.be.equal('2a');
   });
 
+  it('extracts ids', function(){
+    var ids = hashname.ids({'1a':true,cs2a:true,'nope':false});
+    expect(ids.length).to.be.equal(2);
+    expect(ids.indexOf('2a') > -1).to.be.true;
+  });
+
   it('exposes base32 utility', function(){
     expect(hashname.base32).to.be.an('object');
     expect(hashname.base32.encode(new Buffer('foo'))).to.be.equal('mzxw6');

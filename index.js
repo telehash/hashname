@@ -108,6 +108,8 @@ exports.ids = function(keys)
   // validate them
   var ret = [];
   keys.forEach(function(id){
+    // normalize 'cs1a' keys
+    if(id.length == 4 && id.substr(0,2) == 'cs') id = id.substr(2);
     if(exports.isID(id)) ret.push(id);
   })
   // sort them
