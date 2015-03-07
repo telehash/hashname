@@ -7,8 +7,8 @@ function rollup(imbuff)
 {
   var roll = new Buffer(0);
   Object.keys(imbuff).sort().forEach(function(id){
-    roll = crypto.createHash("sha256").update(Buffer.concat([roll,new Buffer(id, 'hex')])).digest();
-    roll = crypto.createHash("sha256").update(Buffer.concat([roll,imbuff[id]])).digest();
+    roll = crypto.createHash('sha256').update(Buffer.concat([roll,new Buffer(id, 'hex')])).digest();
+    roll = crypto.createHash('sha256').update(Buffer.concat([roll,imbuff[id]])).digest();
   });
   return roll;
 }
@@ -23,7 +23,7 @@ exports.base32 = {
     try{
       buf = base32.decode.apply(this,arguments);
     }catch(E){
-      console.log("ERRR",E)
+      console.log('ERRR',E)
       buf = new Buffer(0);
     }
     return buf;
@@ -64,7 +64,7 @@ exports.fromKeys = function(keys, intermediates)
   // first generate intermediates from given keys
   exports.ids(keys).forEach(function(id){
     var keybuf = (Buffer.isBuffer(keys[id])) ? keys[id] : exports.base32.decode(keys[id]);
-    imbuff[id] = crypto.createHash("sha256").update(keybuf).digest();
+    imbuff[id] = crypto.createHash('sha256').update(keybuf).digest();
   });
 
   // require only valid keys to be passed in
@@ -141,7 +141,7 @@ exports.intermediates = function(keys)
   var ret = {};
   exports.ids(keys).forEach(function(id){
     var buf = Buffer.isBuffer(keys[id]) ? keys[id] : exports.base32.decode(keys[id]);
-    ret[id] = exports.base32.encode(crypto.createHash("sha256").update(buf).digest());
+    ret[id] = exports.base32.encode(crypto.createHash('sha256').update(buf).digest());
   });
   return ret;
 }

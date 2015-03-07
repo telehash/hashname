@@ -45,8 +45,8 @@ describe('hashname', function(){
     };
     var im = hashname.intermediates(keys);
     expect(im).to.be.a('object');
-    expect(im["1a"]).to.be.equal('ym7p66flpzyncnwkzxv2qk5dtosgnnstgfhw6xj2wvbvm7oz5oaq');
-    expect(im["3a"]).to.be.equal('bmxelsxgecormqjlnati6chxqua7wzipxliw5le35ifwxlge2zva');
+    expect(im['1a']).to.be.equal('ym7p66flpzyncnwkzxv2qk5dtosgnnstgfhw6xj2wvbvm7oz5oaq');
+    expect(im['3a']).to.be.equal('bmxelsxgecormqjlnati6chxqua7wzipxliw5le35ifwxlge2zva');
   });
 
   it('returns key buffer', function(){
@@ -54,7 +54,7 @@ describe('hashname', function(){
       "3a":"hp6yglmmqwcbw5hno37uauh6fn6dx5oj7s5vtapaifrur2jv6zha",
       "1a": "vgjz3yjb6cevxjomdleilmzasbj6lcc7"
     };
-    var buf = hashname.key("3a",keys);
+    var buf = hashname.key('3a',keys);
     expect(buf).to.be.a('object');
     expect(buf.toString('hex')).to.be.equal('3bfd832d8c85841b74ed76ff4050fe2b7c3bf5c9fcbb5981e0416348e935f64e');
   });
