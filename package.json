@@ -1,6 +1,6 @@
 {
   "name": "hashname",
-  "version": "0.2.8",
+  "version": "0.3.0",
   "description": "Public-Key(s) Fingerprint Generator",
   "dependencies": {
     "siphash": "^1.0.1",
