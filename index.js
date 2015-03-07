@@ -129,6 +129,7 @@ exports.match = function(keys1, keys2, im1, im2)
 exports.key = function(id, keys)
 {
   if(typeof keys != 'object') return false;
+  if(Buffer.isBuffer(keys[id])) return keys[id];
   if(typeof keys[id] != 'string') return false;
   return exports.base32.decode(keys[id]);
 }
