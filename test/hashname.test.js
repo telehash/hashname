@@ -38,17 +38,15 @@ describe('hashname', function(){
     expect(hashname.buffer('4w0fh69ad6d1xhncwwd1020tqnhqm4y5zbdmtqdk7d3v36qk6wbg')).to.be.a('object');
   })
 
-  it('returns packet', function(){
+  it('returns intermediates', function(){
     var keys = {
       "3a":"hp6yglmmqwcbw5hno37uauh6fn6dx5oj7s5vtapaifrur2jv6zha",
       "1a": "vgjz3yjb6cevxjomdleilmzasbj6lcc7"
     };
-    var packet = hashname.toPacket(keys,"3a");
-    expect(packet).to.be.a('object');
-    expect(Buffer.isBuffer(packet.body)).to.be.true;
-    expect(packet.json["1a"]).to.be.equal('ym7p66flpzyncnwkzxv2qk5dtosgnnstgfhw6xj2wvbvm7oz5oaq');
-    var packet = hashname.toPacket(keys,"1a");
-    expect(packet.json["3a"]).to.be.equal('bmxelsxgecormqjlnati6chxqua7wzipxliw5le35ifwxlge2zva');
+    var im = hashname.intermediates(keys);
+    expect(im).to.be.a('object');
+    expect(im["1a"]).to.be.equal('ym7p66flpzyncnwkzxv2qk5dtosgnnstgfhw6xj2wvbvm7oz5oaq');
+    expect(im["3a"]).to.be.equal('bmxelsxgecormqjlnati6chxqua7wzipxliw5le35ifwxlge2zva');
   });
 
   it('returns key buffer', function(){
@@ -61,20 +59,16 @@ describe('hashname', function(){
     expect(buf.toString('hex')).to.be.equal('3bfd832d8c85841b74ed76ff4050fe2b7c3bf5c9fcbb5981e0416348e935f64e');
   });
   
-  it('generates from packet', function(){
-    var json = { '1a': 'ym7p66flpzyncnwkzxv2qk5dtosgnnstgfhw6xj2wvbvm7oz5oaq', '3a':true };
-    var key = new Buffer('3bfd832d8c85841b74ed76ff4050fe2b7c3bf5c9fcbb5981e0416348e935f64e','hex');
-    expect(hashname.fromPacket({json:json,body:key})).to.be.equal('jvdoio6kjvf3yqnxfvck43twaibbg4pmb7y3mqnvxafb26rqllwa');
-  });
-
-  it('generates from packet and hint', function(){
-    var json = { '1a': 'ym7p66flpzyncnwkzxv2qk5dtosgnnstgfhw6xj2wvbvm7oz5oaq'};
-    var key = new Buffer('3bfd832d8c85841b74ed76ff4050fe2b7c3bf5c9fcbb5981e0416348e935f64e','hex');
-    expect(hashname.fromPacket({json:json,body:key},'3a')).to.be.equal('jvdoio6kjvf3yqnxfvck43twaibbg4pmb7y3mqnvxafb26rqllwa');
+  it('generates from intermediates', function(){
+    var ims = { '1a': 'ym7p66flpzyncnwkzxv2qk5dtosgnnstgfhw6xj2wvbvm7oz5oaq' };
+    var keys = {};
+    keys['3a'] = new Buffer('3bfd832d8c85841b74ed76ff4050fe2b7c3bf5c9fcbb5981e0416348e935f64e','hex');
+    expect(hashname.fromKeys(keys, ims)).to.be.equal('jvdoio6kjvf3yqnxfvck43twaibbg4pmb7y3mqnvxafb26rqllwa');
   });
 
   it('returns sorted ids', function(){
     expect(hashname.ids(['1a','2a']).toString()).to.be.equal(['2a','1a'].toString());
+    expect(hashname.ids(['1a','2a'],{'3a':true}).toString()).to.be.equal(['3a','2a','1a'].toString());
   });
 
   it('rejects bad id', function(){

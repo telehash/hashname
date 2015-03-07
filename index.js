@@ -55,36 +55,27 @@ exports.siphash = function(key, value){
 };
 
 // generate hashname from keys json, vals are either base32 keys or key binary Buffer's
-exports.fromKeys = function(json)
+exports.fromKeys = function(keys, intermediates)
 {
-  if(typeof json != 'object') return false;
-  if(!Object.keys(json).length) return false;
+  if(typeof keys != 'object') return false;
+  if(!Object.keys(keys).length) return false;
   var imbuff = {};
-  exports.ids(json).forEach(function(id){
-    var keybuf = (Buffer.isBuffer(json[id])) ? json[id] : exports.base32.decode(json[id]);
+  
+  // first generate intermediates from given keys
+  exports.ids(keys).forEach(function(id){
+    var keybuf = (Buffer.isBuffer(keys[id])) ? keys[id] : exports.base32.decode(keys[id]);
     imbuff[id] = crypto.createHash("sha256").update(keybuf).digest();
   });
-  // require only valid keys to be passed in
-  if(Object.keys(imbuff).length != Object.keys(json).length) return false;
-  return exports.base32.encode(rollup(imbuff));
-}
 
-// generate from a given key (1a), and other intermediate json ({1a:true,2a:"..."})
-exports.fromPacket = function(packet, hint)
-{
-  if(!Buffer.isBuffer(packet.body)) return false;
-  if(typeof packet.json != 'object') return false;
-  if(Buffer.isBuffer(hint)) hint = hint.toString('hex');
-  var imbuff = {};
-  exports.ids(packet.json).forEach(function(id){
-    if(packet.json[id] === true)
-    {
-      imbuff[id] = crypto.createHash("sha256").update(packet.body).digest();
-    }else{
-      imbuff[id] = (Buffer.isBuffer(packet.json[id])) ? packet.json[id] : exports.base32.decode(packet.json[id]);
-    }
+  // require only valid keys to be passed in
+  if(Object.keys(imbuff).length != Object.keys(keys).length) return false;
+
+  // fill in any given intermediates too
+  if(typeof intermediates == 'object') exports.ids(intermediates).forEach(function(id){
+    if(imbuff[id]) return; // skip existing keys
+    imbuff[id] = (Buffer.isBuffer(intermediates[id])) ? intermediates[id] : exports.base32.decode(intermediates[id]);
   });
-  if(hint) imbuff[hint] = crypto.createHash("sha256").update(packet.body).digest();
+
   return exports.base32.encode(rollup(imbuff));
 }
 
@@ -98,7 +89,7 @@ exports.buffer = function(hn)
 }
 
 // returns sorted validated ids from {id:"...",id:"..."} or [id,id]
-exports.ids = function(keys)
+exports.ids = function(keys, intermediates)
 {
   if(typeof keys == 'object' && !Array.isArray(keys))
   {
@@ -111,16 +102,22 @@ exports.ids = function(keys)
     // normalize 'cs1a' keys
     if(id.length == 4 && id.substr(0,2) == 'cs') id = id.substr(2);
     if(exports.isID(id)) ret.push(id);
-  })
+  });
+  
+  // merge in any intermediates
+  if(intermediates) exports.ids(intermediates).forEach(function(id){
+    if(ret.indexOf(id) == -1) ret.push(id);
+  });
+
   // sort them
   return ret.sort().reverse();
 }
 
 // just a convenience
-exports.match = function(keys1, keys2)
+exports.match = function(keys1, keys2, im1, im2)
 {
-  var ids1 = exports.ids(keys1);
-  var ids2 = exports.ids(keys2);
+  var ids1 = exports.ids(keys1, im1);
+  var ids2 = exports.ids(keys2, im2);
   for(var i = 0; ids1[i]; i++)
   {
     if(ids2.indexOf(ids1[i]) >= 0) return ids1[i];
@@ -136,23 +133,16 @@ exports.key = function(id, keys)
   return exports.base32.decode(keys[id]);
 }
 
-// generate the more compact packet format
-exports.toPacket = function(keys, id)
+// return the intermediates (base32)
+exports.intermediates = function(keys)
 {
   if(typeof keys != 'object') return false;
-  if(!keys[id]) return false;
-  var json = {};
-  var body;
-  exports.ids(keys).forEach(function(id2){
-    if(id == id2)
-    {
-      json[id] = true;
-      body = exports.base32.decode(keys[id]);
-    }else{
-      json[id2] = exports.base32.encode(crypto.createHash("sha256").update(exports.base32.decode(keys[id2])).digest());
-    }
+  var ret = {};
+  exports.ids(keys).forEach(function(id){
+    var buf = Buffer.isBuffer(keys[id]) ? keys[id] : exports.base32.decode(keys[id]);
+    ret[id] = exports.base32.encode(crypto.createHash("sha256").update(buf).digest());
   });
-  return {json:json, body:body};
+  return ret;
 }
 
 exports.isHashname = function(hn)
